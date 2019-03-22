@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-	"net"
+	"fmt"
 
-	pb "github.com/yuditan/shipper/consignment-service/proto/consignment"
 	micro "github.com/micro/go-micro"
+	pb "github.com/yuditan/shipper/consignment-service/proto/consignment"
 	"golang.org/x/net/context"
 )
 
@@ -53,15 +52,14 @@ func main() {
 
 	srv := micro.NewService(
 		//name must match the package name in protobuf definition
-		micro.Name("go.micro.srv.consignment")
-		micro.Version("latest")
+		micro.Name("go.micro.srv.consignment"),
+		micro.Version("latest"),
 	)
 
 	srv.Init()
-	
-	//register handler
-	pb.RegisterShippingServiceServer(srv.Server(), &service{repo})
 
+	//register handler
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
 	// Run the server
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)
